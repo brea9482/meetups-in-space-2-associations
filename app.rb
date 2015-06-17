@@ -30,17 +30,23 @@ def authenticate!
 end
 
 def meetup_list
-  meetups = Meetup.all.order(:name)
-  meetups.to_a
+  results = Meetup.all.order(:name)
+  results.to_a
 end
 
-def meetup_find(id)
-  results = Meetup.find(id)
-  results
-end
+# def meetup_find(id)
+#   Meetup.find(id)
+# end
 
-def meetup_save(input)
-end
+# def meetup_save(input)
+#   # do a join to get the user id in the same table
+#   # if user id is not nill, save the record,
+#   # otherwise flash an error msg that we need to be signed in to create a meetup
+#   if
+#     data = input[[:name],[:description],[:location]]
+#     meetup_new = Meetup.create()
+#   end
+# end
 
 
 get '/' do
@@ -48,20 +54,18 @@ get '/' do
   erb :index
 end
 
-get '/:id' do
-  @id = meetup_find(params[:id])
-  erb :show
+get '/new' do
+  erb :new
 end
 
-get '/createmeetup' do
-  erb :createmeetup
-end
-
-post '/createmeetup' do
-  meetup_save(params)
+post '/new' do
+  if authenticate!
+    # meetup_save(params)
+  else
+    authenticate!
+  end
   redirect '/'
 end
-
 
 get '/auth/github/callback' do
   auth = env['omniauth.auth']
@@ -82,4 +86,10 @@ end
 
 get '/example_protected_page' do
   authenticate!
+end
+
+
+get '/:id' do
+  @specific_meetup = Meetup.find(params[:id])
+  erb :show
 end

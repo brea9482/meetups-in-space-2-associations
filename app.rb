@@ -34,10 +34,6 @@ def meetup_list
   results.to_a
 end
 
-# def meetup_find(id)
-#   Meetup.find(id)
-# end
-
 # def meetup_save(input)
 #   # do a join to get the user id in the same table
 #   # if user id is not nill, save the record,
@@ -59,10 +55,11 @@ get '/new' do
 end
 
 post '/new' do
+  new_meetup = Meetup.new(name: params[:name], description: params[:description], location: params[:location])
+
   if authenticate!
-    # meetup_save(params)
   else
-    authenticate!
+    new_meetup.save
   end
   redirect '/'
 end
